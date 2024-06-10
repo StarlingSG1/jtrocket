@@ -1,5 +1,5 @@
 "use client"
-import {Fragment, useEffect} from "react";
+import {Fragment, useEffect, useState} from "react";
 import {Dialog, Transition} from "@headlessui/react";
 import {XMarkIcon} from "@heroicons/react/24/outline";
 import {ThematicsType, useSidebarStore} from "@/app/store/useSidebarStore";
@@ -14,6 +14,10 @@ export function MobileSidebar({}: MobileSidebarProps) {
     const setIsOpen = useSidebarStore((s) => s.setSidebarOpen)
     const isOpen: boolean = useSidebarStore((s) => s.isSidebarOpen)
     const thematics: ThematicsType[] = useSidebarStore((s) => s.thematics)
+
+    const [currentThematic, setCurrentThematic] = useState<string | null>(null)
+    // function that returns the first letter of a string
+    const getInitial = (name: string) => name.charAt(0)
 
     useEffect(() => {
         useSidebarStore.getState().getThemes()
@@ -80,7 +84,7 @@ export function MobileSidebar({}: MobileSidebarProps) {
                                                         <a
                                                             href={item.href}
                                                             className={`
-                                                                ${item.current
+                                                                ${currentThematic === item.name
                                                                 ? 'bg-gray-50 text-indigo-600'
                                                                 : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'},
                                                                 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
@@ -88,7 +92,7 @@ export function MobileSidebar({}: MobileSidebarProps) {
                                                         >
                                                             <item.icon
                                                                 className={`
-                                                                    ${item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600'},
+                                                                    ${currentThematic === item.name ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600'},
                                                                     'h-6 w-6 shrink-0'
                                                                 `}
                                                                 aria-hidden="true"
@@ -108,7 +112,7 @@ export function MobileSidebar({}: MobileSidebarProps) {
                                                         <a
                                                             href={thematic.href}
                                                             className={`
-                                                                ${thematic.current
+                                                                ${currentThematic === thematic.name
                                                                 ? 'bg-gray-50 text-indigo-600'
                                                                 : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'},
                                                                 'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'`
@@ -117,14 +121,14 @@ export function MobileSidebar({}: MobileSidebarProps) {
                                   <span
                                       className={`
                                           ${
-                                          thematic.current
+                                          currentThematic === thematic.name
                                               ? 'text-indigo-600 border-indigo-600'
                                               : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600'
                                       },
                                           'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
                                       `}
                                   >
-                                    {thematic.initial}
+                                   {getInitial(thematic.name)}
                                   </span>
                                                             <span className="truncate">{thematic.name}</span>
                                                         </a>
